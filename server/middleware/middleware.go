@@ -58,9 +58,11 @@ func init() {
 func GetAllTask(w http.ResponseWriter, r *http.Request){
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	payload := getAllTask
+	payload := getAllTask()
 	json.NewEncoder(w).Encode(payload)
 }
+
+
 
 //Create task routes
 func CreateTask(w http.ResponseWriter, r *http.Request){
@@ -78,8 +80,9 @@ func CreateTask(w http.ResponseWriter, r *http.Request){
 
 }
 
-// update task route
-func TaskComplete(w http.ResponseWriter, r *http.Request){
+// TaskComplete update task route
+func TaskComplete(w http.ResponseWriter, r *http.Request) {
+
 	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "PUT")
@@ -90,29 +93,28 @@ func TaskComplete(w http.ResponseWriter, r *http.Request){
 	json.NewEncoder(w).Encode(params["id"])
 }
 
-//undo the complte task route
+// undo the complte task route
 func UndoTask(w http.ResponseWriter, r *http.Request){
 	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "PUT")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
 	params := mux.Vars(r)
 	undoTask(params["id"])
 	json.NewEncoder(w).Encode(params["id"])
 }
 
-//delete task in route
-func DeleteTask( w http.ResponseWriter, r *http.Request){
-	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
+// DeleteTask delete one task route
+func DeleteTask(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
 	params := mux.Vars(r)
 	deleteOneTask(params["id"])
 	json.NewEncoder(w).Encode(params["id"])
-	// json.newEncoder(w).encode("Task not found")
+	// json.NewEncoder(w).Encode("Task not found")
+
 }
 
 //delete all tasks route
@@ -124,30 +126,30 @@ func DeleteAllTask(w http.ResponseWriter, r *http.Request){
 	json.NewEncoder(w).Encode(count)
 }
 
-//Get all the task from the DB.
+
+// get all task from the DB and return it
 func getAllTask() []primitive.M {
 	cur, err := collection.Find(context.Background(), bson.D{{}})
-	
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var results []primitive.M 
+	var results []primitive.M
 	for cur.Next(context.Background()) {
 		var result bson.M
 		e := cur.Decode(&result)
-
 		if e != nil {
 			log.Fatal(e)
 		}
-
+		// fmt.Println("cur..>", cur, "result", reflect.TypeOf(result), reflect.TypeOf(result["_id"]))
 		results = append(results, result)
+
 	}
 
 	if err := cur.Err(); err != nil {
 		log.Fatal(err)
 	}
-	
+
 	cur.Close(context.Background())
 	return results
 }
@@ -190,8 +192,9 @@ func undoTask(task string){
 
 	fmt.Println("Modified count: ", result.ModifiedCount)
 }
-// delete task from the db by ID
-func deleteOneTask(task string){
+
+// delete one task from the DB, delete by ID
+func deleteOneTask(task string) {
 	fmt.Println(task)
 	id, _ := primitive.ObjectIDFromHex(task)
 	filter := bson.M{"_id": id}
@@ -199,6 +202,7 @@ func deleteOneTask(task string){
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	fmt.Println("Deleted Document", d.DeletedCount)
 }
 
