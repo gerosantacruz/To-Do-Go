@@ -19,7 +19,7 @@ const connectionStringLocal = "mongodb://localhost:27017"
 
 //const connectionString = 
 
-//Database name
+//DBName ...
 const DBName = "GoTest"
 
 //collection name
@@ -54,7 +54,7 @@ func init() {
 	fmt.Println("Collection instance created!")
 }
 
-// get all the task from the DB
+//GetAllTask get all the task from the DB ... 
 func GetAllTask(w http.ResponseWriter, r *http.Request){
 	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -64,7 +64,7 @@ func GetAllTask(w http.ResponseWriter, r *http.Request){
 
 
 
-//Create task routes
+//CreateTask Create task routes
 func CreateTask(w http.ResponseWriter, r *http.Request){
 	w.Header().Set("Contex-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -93,7 +93,7 @@ func TaskComplete(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(params["id"])
 }
 
-// undo the complte task route
+// UndoTask undo the complte task route
 func UndoTask(w http.ResponseWriter, r *http.Request){
 	w.Header().Set("Content-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -117,7 +117,7 @@ func DeleteTask(w http.ResponseWriter, r *http.Request) {
 
 }
 
-//delete all tasks route
+//DeleteAllTask ... delete all tasks route
 func DeleteAllTask(w http.ResponseWriter, r *http.Request){
 	w.Header().Set("Content-Type", "application/x-www-form-urlenconded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
